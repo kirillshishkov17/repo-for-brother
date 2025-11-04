@@ -1,5 +1,6 @@
 package app.Multibank.controller;
 
+import app.Multibank.clinets.VBankClient;
 import app.Multibank.model.BankConnection;
 import app.Multibank.model.User;
 import app.Multibank.service.BankConnectionService;
@@ -11,12 +12,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.IOException;
 import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-@Controller
+@RestController
 public class BankController {
 
     @Autowired
@@ -27,6 +29,15 @@ public class BankController {
 
     @Autowired
     private BankingDataAdapterService bankingDataAdapterService;
+
+    @Autowired
+    private VBankClient vBankClient;
+
+    //Пример получения токена для VBankApi
+    @GetMapping("/access-token/VBank")
+    public String getVBankAccessToken() {
+        return vBankClient.getVBankAccessToken();
+    }
 
     @GetMapping("/banks")
     public String showBanksPage(Principal principal, Model model) {

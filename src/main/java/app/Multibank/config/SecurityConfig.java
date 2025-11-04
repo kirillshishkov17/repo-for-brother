@@ -56,7 +56,7 @@ public class SecurityConfig {
                                 "/api/**",
                                 "/debug/**",
                                 "/test/**",
-                                "/my-test-request"
+                                "/access-token/VBank"
                         ).permitAll()
                         // Все остальные пути требуют аутентификации
                         .anyRequest().authenticated()
