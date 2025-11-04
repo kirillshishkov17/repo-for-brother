@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Демо-страницы - Multibank</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #667eea;
+            --secondary: #764ba2;
+        }
+
+        .demo-hero {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 80px 0;
+            text-align: center;
+        }
+
+        .demo-card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .demo-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        }
+
+        .demo-header {
+            padding: 30px;
+            color: white;
+            text-align: center;
+        }
+
+        .demo-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+            margin: 0 auto 20px;
+            background: rgba(255,255,255,0.2);
+        }
+
+        .btn-gradient {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            border: none;
+            color: white;
+            font-weight: 600;
+            padding: 12px 30px;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-gradient:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+            color: white;
+        }
+
+        .feature-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+<div th:replace="fragments/navbar :: navbar"></div>
+
+<!-- Hero Section -->
+<section class="demo-hero">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <h1 class="display-4 fw-bold mb-4">
+                    <i class="fas fa-eye me-3"></i>
+                    Демо-страницы
+                </h1>
+                <p class="lead mb-0 fs-5">
+                    Ознакомьтесь со всеми страницами нашего приложения. Здесь вы найдете полный обзор
+                    функционала Multibank Platform.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Demo Pages -->
+<section class="py-5">
+    <div class="container">
+        <div class="row g-4">
+            <!-- Аутентификация -->
+            <div class="col-md-6 col-lg-4">
+                <div class="demo-card position-relative">
+                    <span class="feature-badge bg-success">Аутентификация</span>
+                    <div class="demo-header" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                        <div class="demo-icon">
+                            <i class="fas fa-user-lock"></i>
+                        </div>
+                        <h4 class="fw-bold mb-2">Вход в систему</h4>
+                        <p class="mb-0 opacity-75">Страницы аутентификации</p>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="mb-4">
+                            <h6 class="fw-bold mb-3">Доступные страницы:</h6>
+                            <ul class="list-unstyled mb-0">
+                                <li class="mb-2">
+                                    <i class="fas fa-sign-in-alt text-primary me-2"></i>
+                                    <a href="/login" class="text-decoration-none">Страница входа</a>
+                                </li>
+                                <li class="mb-2">
+                                    <i class="fas fa-user-plus text-success me-2"></i>
+                                    <a href="/register" class="text-decoration-none">Регистрация</a>
+                                </li>
+                                <li class="mb-0">
+                                    <i class="fas fa-home text-info me-2"></i>
+                                    <a href="/" class="text-decoration-none">Главная страница</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="text-center">
+                            <a href="/login" class="btn btn-outline-primary w-100">
+                                <i class="fas fa-external-link-alt me-2"></i>
+                                Перейти к входу
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Основной функционал -->
+            <div class="col-md-6 col-lg-4">
+                <div class="demo-card position-relative">
+                    <span class="feature-badge bg-primary">Основное</span>
+                    <div class="demo-header" style="background: linear-gradient(135deg, #21a038 0%, #1a8730 100%);">
+                        <div class="demo-icon">
+                            <i class="fas fa-tachometer-alt"></i>
+                        </div>
+                        <h4 class="fw-bold mb-2">Основной интерфейс</h4>
+                        <p class="mb-0 opacity-75">Панель управления и счета</p>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="mb-4">
+                            <h6 class="fw-bold mb-3">Основные страницы:</h6>
+                            <ul class="list-unstyled mb-0">
+                                <li class="mb-2">
+                                    <i class="fas fa-chart-line text-success me-2"></i>
+                                    <a href="/dashboard" class="text-decoration-none">Дашборд</a>
+                                </li>
+                                <li class="mb-2">
+                                    <i class="fas fa-wallet text-warning me-2"></i>
+                                    <a href="/accounts" class="text-decoration-none">Мои счета</a>
+                                </li>
+                                <li class="mb-2">
+                                    <i class="fas fa-list-alt text-info me-2"></i>
+                                    <a href="/transactions" class="text-decoration-none">Транзакции</a>
+                                </li>
+                                <li class="mb-0">
+                                    <i class="fas fa-exchange-alt text-primary me-2"></i>
+                                    <a href="/transfer" class="text-decoration-none">Переводы</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="text-center">
+                            <a href="/dashboard" class="btn btn-outline-success w-100">
+                                <i class="fas fa-external-link-alt me-2"></i>
+                                Открыть дашборд
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Управление банками -->
+            <div class="col-md-6 col-lg-4">
+                <div class="demo-card position-relative">
+                    <span class="feature-badge bg-info">Банки</span>
+                    <div class="demo-header" style="background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);">
+                        <div class="demo-icon">
+                            <i class="fas fa-university"></i>
+                        </div>
+                        <h4 class="fw-bold mb-2">Управление банками</h4>
+                        <p class="mb-0 opacity-75">Подключение и настройка</p>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="mb-4">
+                            <h6 class="fw-bold mb-3">Банковские страницы:</h6>
+                            <ul class="list-unstyled mb-0">
+                                <li class="mb-2">
+                                    <i class="fas fa-plug text-success me-2"></i>
+                                    <a href="/banks" class="text-decoration-none">Подключение банков</a>
+                                </li>
+                                <li class="mb-2">
+                                    <i class="fas fa-link text-primary me-2"></i>
+                                    <a href="/bank-connections" class="text-decoration-none">Мои подключения</a>
+                                </li>
+                                <li class="mb-0">
+                                    <i class="fas fa-cog text-warning me-2"></i>
+                                    <a href="/admin/api-mode" class="text-decoration-none">Режим API</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="text-center">
+                            <a href="/banks" class="btn btn-outline-danger w-100">
+                                <i class="fas fa-external-link-alt me-2"></i>
+                                Управление банками
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Информационные страницы -->
+            <div class="col-md-6 col-lg-4">
+                <div class="demo-card position-relative">
+                    <span class="feature-badge bg-secondary">Информация</span>
+                    <div class="demo-header" style="background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);">
+                        <div class="demo-icon">
+                            <i class="fas fa-info-circle"></i>
+                        </div>
+                        <h4 class="fw-bold mb-2">Информация</h4>
+                        <p class="mb-0 opacity-75">О проекте и контакты</p>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="mb-4">
+                            <h6 class="fw-bold mb-3">Информационные страницы:</h6>
+                            <ul class="list-unstyled mb-0">
+                                <li class="mb-2">
+                                    <i class="fas fa-users text-info me-2"></i>
+                                    <a href="/about" class="text-decoration-none">О нас</a>
+                                </li>
+                                <li class="mb-2">
+                                    <i class="fas fa-envelope text-primary me-2"></i>
+                                    <a href="/contact" class="text-decoration-none">Контакты</a>
+                                </li>
+                                <li class="mb-0">
+                                    <i class="fas fa-question-circle text-success me-2"></i>
+                                    <a href="/demo" class="text-decoration-none">Демо (текущая)</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="text-center">
+                            <a href="/about" class="btn btn-outline-primary w-100">
+                                <i class="fas fa-external-link-alt me-2"></i>
+                                Узнать о нас
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- API и Технологии -->
+            <div class="col-md-6 col-lg-4">
+                <div class="demo-card position-relative">
+                    <span class="feature-badge bg-warning">Технологии</span>
+                    <div class="demo-header" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                        <div class="demo-icon">
+                            <i class="fas fa-code"></i>
+                        </div>
+                        <h4 class="fw-bold mb-2">API Демо</h4>
+                        <p class="mb-0 opacity-75">Тестирование функционала</p>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="mb-4">
+                            <h6 class="fw-bold mb-3">Тестовые endpoints:</h6>
+                            <ul class="list-unstyled mb-0">
+                                <li class="mb-2">
+                                    <i class="fas fa-bolt text-warning me-2"></i>
+                                    <a href="/api/status" class="text-decoration-none">/api/status</a>
+                                </li>
+                                <li class="mb-2">
+                                    <i class="fas fa-vial text-info me-2"></i>
+                                    <a href="/api/test" class="text-decoration-none">/api/test</a>
+                                </li>
+                                <li class="mb-0">
+                                    <i class="fas fa-network-wired text-success me-2"></i>
+                                    <a href="/api/test-connection" class="text-decoration-none">/api/test-connection</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="text-center">
+                            <button onclick="testAllEndpoints()" class="btn btn-outline-warning w-100">
+                                <i class="fas fa-play me-2"></i>
+                                Запустить тесты
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Администрирование -->
+            <div class="col-md-6 col-lg-4">
+                <div class="demo-card position-relative">
+                    <span class="feature-badge bg-danger">Админ</span>
+                    <div class="demo-header" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                        <div class="demo-icon">
+                            <i class="fas fa-user-shield"></i>
+                        </div>
+                        <h4 class="fw-bold mb-2">Администрирование</h4>
+                        <p class="mb-0 opacity-75">Панель управления</p>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="mb-4">
+                            <h6 class="fw-bold mb-3">Админ страницы:</h6>
+                            <ul class="list-unstyled mb-0">
+                                <li class="mb-2">
+                                    <i class="fas fa-cog text-primary me-2"></i>
+                                    <a href="/admin/api-mode" class="text-decoration-none">Режим API</a>
+                                </li>
+                                <li class="mb-2">
+                                    <i class="fas fa-sliders-h text-success me-2"></i>
+                                    Настройки системы
+                                </li>
+                                <li class="mb-0">
+                                    <i class="fas fa-chart-bar text-info me-2"></i>
+                                    Статистика
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="text-center">
+                            <a href="/admin/api-mode" class="btn btn-outline-info w-100">
+                                <i class="fas fa-external-link-alt me-2"></i>
+                                Панель админа
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Тестовые результаты -->
+        <div class="row mt-5">
+            <div class="col-12">
+                <div class="demo-card">
+                    <div class="card-body p-4">
+                        <h4 class="fw-bold mb-4 text-center">
+                            <i class="fas fa-vial me-2"></i>
+                            Тестирование API Endpoints
+                        </h4>
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <div class="text-center p-3 border rounded">
+                                    <h6 class="fw-bold">Статус API</h6>
+                                    <button onclick="testEndpoint('/api/status')" class="btn btn-sm btn-outline-primary w-100">
+                                        Проверить
+                                    </button>
+                                    <div id="statusResult" class="mt-2 small"></div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="text-center p-3 border rounded">
+                                    <h6 class="fw-bold">Тест API</h6>
+                                    <button onclick="testEndpoint('/api/test')" class="btn btn-sm btn-outline-success w-100">
+                                        Запустить тест
+                                    </button>
+                                    <div id="testResult" class="mt-2 small"></div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="text-center p-3 border rounded">
+                                    <h6 class="fw-bold">Подключение</h6>
+                                    <button onclick="testEndpoint('/api/test-connection')" class="btn btn-sm btn-outline-info w-100">
+                                        Проверить
+                                    </button>
+                                    <div id="connectionResult" class="mt-2 small"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="fullResults" class="mt-4" style="display: none;">
+                            <h6 class="fw-bold mb-3">Полные результаты:</h6>
+                            <pre id="resultsContent" class="p-3 bg-light rounded small"></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer class="bg-dark text-light py-4">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <h5 class="fw-bold">
+                    <i class="fas fa-piggy-bank me-2"></i>
+                    Multibank
+                </h5>
+                <p class="text-muted mb-0">Современная платформа для управления банковскими счетами</p>
+            </div>
+            <div class="col-md-6 text-md-end">
+                <p class="text-muted mb-0">
+                    &copy; 2024 Multibank. Все права защищены.<br>
+                    Open Banking API: ABank, VBank, SBank
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    async function testEndpoint(endpoint) {
+        const resultId = endpoint.replace('/api/', '') + 'Result';
+        
+        try {
+            document.getElementById(resultId).innerHTML = '<span class="text-warning">⏳ Тестирование...</span>';
+            
+            const response = await fetch(endpoint);
+            const data = await response.json();
+            
+            document.getElementById(resultId).innerHTML = 
+                `<span class="text-success">✅ Успешно</span><br><small>${data.message || 'OK'}</small>`;
+                
+        } catch (error) {
+            document.getElementById(resultId).innerHTML = 
+                `<span class="text-danger">❌ Ошибка</span><br><small>${error.message}</small>`;
+        }
+    }
+
+    async function testAllEndpoints() {
+        const endpoints = ['/api/status', '/api/test', '/api/test-connection'];
+        const results = {};
+        
+        document.getElementById('fullResults').style.display = 'block';
+        document.getElementById('resultsContent').textContent = 'Запуск тестов...';
+        
+        for (const endpoint of endpoints) {
+            try {
+                const response = await fetch(endpoint);
+                results[endpoint] = await response.json();
+            } catch (error) {
+                results[endpoint] = { error: error.message };
+            }
+        }
+        
+        document.getElementById('resultsContent').textContent = JSON.stringify(results, null, 2);
+    }
+
+    // Автоматическое тестирование при загрузке
+    document.addEventListener('DOMContentLoaded', function() {
+        setTimeout(() => {
+            testEndpoint('/api/status');
+        }, 1000);
+    });
+</script>
+</body>
+</html>

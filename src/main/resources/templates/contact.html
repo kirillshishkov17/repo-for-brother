@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Контакты - Multibank</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #667eea;
+            --secondary: #764ba2;
+        }
+
+        .contact-hero {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 80px 0;
+            text-align: center;
+        }
+
+        .contact-card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+        }
+
+        .contact-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        }
+
+        .contact-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        .btn-gradient {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            border: none;
+            color: white;
+            font-weight: 600;
+            padding: 12px 30px;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-gradient:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+            color: white;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
+    </style>
+</head>
+<body>
+<div th:replace="fragments/navbar :: navbar"></div>
+
+<!-- Hero Section -->
+<section class="contact-hero">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <h1 class="display-4 fw-bold mb-4">
+                    <i class="fas fa-envelope me-3"></i>
+                    Свяжитесь с нами
+                </h1>
+                <p class="lead mb-0 fs-5">
+                    Есть вопросы или нужна помощь? Мы всегда готовы помочь вам с любыми вопросами
+                    о нашей платформе и услугах.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Information -->
+<section class="py-5">
+    <div class="container">
+        <div class="row g-4 mb-5">
+            <div class="col-md-4">
+                <div class="contact-card text-center p-4 h-100">
+                    <div class="contact-icon mx-auto" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <h5 class="fw-bold mb-3">Электронная почта</h5>
+                    <p class="text-muted mb-3">Напишите нам на почту, и мы ответим в течение 24 часов</p>
+                    <a th:href="|mailto:${email}|" class="btn btn-outline-primary">
+                        <i class="fas fa-paper-plane me-2"></i>
+                        <span th:text="${email}">support@multibank.ru</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="contact-card text-center p-4 h-100">
+                    <div class="contact-icon mx-auto" style="background: linear-gradient(135deg, #21a038 0%, #1a8730 100%);">
+                        <i class="fas fa-phone"></i>
+                    </div>
+                    <h5 class="fw-bold mb-3">Телефон</h5>
+                    <p class="text-muted mb-3">Звоните нам в рабочее время с 9:00 до 18:00 по МСК</p>
+                    <a href="tel:+78001234567" class="btn btn-outline-success">
+                        <i class="fas fa-phone me-2"></i>
+                        +7 (800) 123-45-67
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="contact-card text-center p-4 h-100">
+                    <div class="contact-icon mx-auto" style="background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);">
+                        <i class="fas fa-comments"></i>
+                    </div>
+                    <h5 class="fw-bold mb-3">Онлайн-чат</h5>
+                    <p class="text-muted mb-3">Получите мгновенную помощь через наш онлайн-чат</p>
+                    <button class="btn btn-outline-danger" onclick="openChat()">
+                        <i class="fas fa-comment me-2"></i>
+                        Открыть чат
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Contact Form -->
+            <div class="col-lg-8">
+                <div class="contact-card">
+                    <div class="card-body p-4">
+                        <h4 class="fw-bold mb-4">
+                            <i class="fas fa-paper-plane me-2"></i>
+                            Отправьте нам сообщение
+                        </h4>
+                        <form>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold">Имя</label>
+                                    <input type="text" class="form-control" placeholder="Ваше имя" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold">Email</label>
+                                    <input type="email" class="form-control" placeholder="your@email.com" required>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label fw-semibold">Тема</label>
+                                    <select class="form-select" required>
+                                        <option value="">Выберите тему</option>
+                                        <option>Техническая поддержка</option>
+                                        <option>Вопрос по функционалу</option>
+                                        <option>Партнерство</option>
+                                        <option>Жалоба</option>
+                                        <option>Предложение</option>
+                                        <option>Другое</option>
+                                    </select>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label fw-semibold">Сообщение</label>
+                                    <textarea class="form-control" rows="6" placeholder="Опишите ваш вопрос или проблему..." required></textarea>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="privacyCheck" required>
+                                        <label class="form-check-label text-muted" for="privacyCheck">
+                                            Я соглашаюсь с обработкой персональных данных
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <button type="submit" class="btn btn-gradient">
+                                        <i class="fas fa-paper-plane me-2"></i>
+                                        Отправить сообщение
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FAQ & Information -->
+            <div class="col-lg-4">
+                <div class="contact-card">
+                    <div class="card-body p-4">
+                        <h5 class="fw-bold mb-4">
+                            <i class="fas fa-question-circle me-2"></i>
+                            Частые вопросы
+                        </h5>
+
+                        <div class="accordion" id="faqAccordion">
+                            <div class="accordion-item border-0">
+                                <h6 class="accordion-header">
+                                    <button class="accordion-button collapsed bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                                        Как подключить банк?
+                                    </button>
+                                </h6>
+                                <div id="faq1" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                    <div class="accordion-body">
+                                        <small class="text-muted">
+                                            Перейдите в раздел "Банки", выберите нужный банк и нажмите "Подключить".
+                                            Вам будет предложено пройти OAuth2 аутентификацию.
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="accordion-item border-0">
+                                <h6 class="accordion-header">
+                                    <button class="accordion-button collapsed bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                                        Безопасно ли подключать банки?
+                                    </button>
+                                </h6>
+                                <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                    <div class="accordion-body">
+                                        <small class="text-muted">
+                                            Да, мы используем банковские стандарты безопасности OAuth2.
+                                            Ваши данные никогда не хранятся в открытом виде.
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="accordion-item border-0">
+                                <h6 class="accordion-header">
+                                    <button class="accordion-button collapsed bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                                        Сколько стоит использование?
+                                    </button>
+                                </h6>
+                                <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                    <div class="accordion-body">
+                                        <small class="text-muted">
+                                            Базовый функционал полностью бесплатен. Премиум функции доступны
+                                            по подписке.
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <h6 class="fw-bold mb-3">Время работы поддержки</h6>
+                        <div class="mb-2">
+                            <small class="text-muted">
+                                <i class="fas fa-clock me-2"></i>
+                                Пн-Пт: 9:00 - 18:00 (МСК)
+                            </small>
+                        </div>
+                        <div class="mb-2">
+                            <small class="text-muted">
+                                <i class="fas fa-clock me-2"></i>
+                                Сб-Вс: 10:00 - 16:00 (МСК)
+                            </small>
+                        </div>
+                        <div>
+                            <small class="text-muted">
+                                <i class="fas fa-envelope me-2"></i>
+                                Экстренная поддержка: 24/7
+                            </small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Social Links -->
+                <div class="contact-card mt-4">
+                    <div class="card-body p-4 text-center">
+                        <h6 class="fw-bold mb-3">Мы в соцсетях</h6>
+                        <div class="d-flex justify-content-center gap-3">
+                            <a href="#" class="btn btn-outline-primary btn-sm">
+                                <i class="fab fa-telegram"></i>
+                            </a>
+                            <a href="#" class="btn btn-outline-info btn-sm">
+                                <i class="fab fa-vk"></i>
+                            </a>
+                            <a href="#" class="btn btn-outline-dark btn-sm">
+                                <i class="fab fa-github"></i>
+                            </a>
+                            <a href="#" class="btn btn-outline-danger btn-sm">
+                                <i class="fab fa-youtube"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Map Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="contact-card">
+                    <div class="card-body p-4">
+                        <h5 class="fw-bold mb-4">
+                            <i class="fas fa-map-marker-alt me-2"></i>
+                            Наш офис
+                        </h5>
+                        <div class="row align-items-center">
+                            <div class="col-md-8">
+                                <div class="bg-light rounded p-4 text-center">
+                                    <i class="fas fa-building fa-3x text-muted mb-3"></i>
+                                    <h6 class="fw-bold">Москва, Пресненская наб., 12</h6>
+                                    <p class="text-muted mb-0">
+                                        БЦ "Федерация", этаж 15<br>
+                                        Москва, Россия, 123112
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="text-center">
+                                    <i class="fas fa-subway fa-2x text-primary mb-3"></i>
+                                    <h6 class="fw-bold">Как добраться</h6>
+                                    <small class="text-muted">
+                                        Метро: Выставочная<br>
+                                        МЦК: Деловой центр<br>
+                                        <br>
+                                        Пешком: 5 минут
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer class="bg-dark text-light py-4">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <h5 class="fw-bold">
+                    <i class="fas fa-piggy-bank me-2"></i>
+                    Multibank
+                </h5>
+                <p class="text-muted mb-0">Современная платформа для управления банковскими счетами</p>
+            </div>
+            <div class="col-md-6 text-md-end">
+                <p class="text-muted mb-0">
+                    &copy; 2024 Multibank. Все права защищены.<br>
+                    Open Banking API: ABank, VBank, SBank
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    function openChat() {
+        alert('Чат поддержки будет открыт в новом окне. В настоящее время чат находится в разработке.');
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multibank - Управление финансами через Open Banking API</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #667eea;
+            --secondary: #764ba2;
+            --success: #28a745;
+            --warning: #ffc107;
+            --info: #17a2b8;
+        }
+
+        .hero-section {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 120px 0 100px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><polygon fill="rgba(255,255,255,0.05)" points="0,1000 1000,0 1000,1000"/></svg>');
+        }
+
+        .feature-card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            padding: 30px;
+            text-align: center;
+            height: 100%;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        }
+
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+            margin: 0 auto 20px;
+        }
+
+        .bank-card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .bank-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        }
+
+        .bank-header {
+            padding: 30px;
+            color: white;
+            text-align: center;
+        }
+
+        .bank-logo {
+            width: 80px;
+            height: 80px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+            margin: 0 auto 20px;
+            background: rgba(255,255,255,0.2);
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
+            border: none;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.08);
+        }
+
+        .btn-gradient {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            border: none;
+            color: white;
+            font-weight: 600;
+            padding: 12px 30px;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-gradient:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+            color: white;
+        }
+
+        .api-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(255,255,255,0.9);
+            color: var(--primary);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+<div th:replace="fragments/navbar :: guest-navbar"></div>
+
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container position-relative">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="display-4 fw-bold mb-4">
+                    <i class="fas fa-university me-3"></i>
+                    Управляйте всеми банками<br>в одном месте
+                </h1>
+                <p class="lead mb-5 fs-5">
+                    Multibank - современная платформа для объединения ваших банковских счетов
+                    через Open Banking API. Безопасные переводы, аналитика и полный контроль
+                    над финансами.
+                </p>
+
+                <div class="d-flex flex-wrap gap-3">
+                    <a href="/register" class="btn btn-light btn-lg fw-bold px-4 py-3">
+                        <i class="fas fa-rocket me-2"></i>
+                        Начать бесплатно
+                    </a>
+                    <a href="/demo" class="btn btn-outline-light btn-lg fw-bold px-4 py-3">
+                        <i class="fas fa-eye me-2"></i>
+                        Посмотреть демо
+                    </a>
+                </div>
+
+                <div class="mt-4 d-flex flex-wrap gap-4">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-shield-alt text-warning me-2"></i>
+                        <small>Банковская безопасность</small>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-bolt text-success me-2"></i>
+                        <small>Мгновенные переводы</small>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-chart-line text-info me-2"></i>
+                        <small>Умная аналитика</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 text-center">
+                <div class="position-relative">
+                    <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+                         alt="Banking Dashboard" class="img-fluid"
+                         style="max-height: 400px; filter: drop-shadow(0 20px 40px rgba(0,0,0,0.3));">
+                    <div class="api-badge">
+                        <i class="fas fa-plug me-1"></i>
+                        Open Banking API
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row text-center mb-5">
+            <div class="col-12">
+                <h2 class="fw-bold display-5 mb-3">Почему выбирают Multibank?</h2>
+                <p class="lead text-muted">Все необходимое для современного управления финансами в одном решении</p>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-4">
+                <div class="feature-card">
+                    <div class="feature-icon" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                        <i class="fas fa-exchange-alt"></i>
+                    </div>
+                    <h4 class="fw-bold mb-3">Межбанковские переводы</h4>
+                    <p class="text-muted">
+                        Переводите деньги между разными банками мгновенно и безопасно через
+                        единый интерфейс без комиссий
+                    </p>
+                    <ul class="list-unstyled text-start">
+                        <li class="mb-2">
+                            <i class="fas fa-check text-success me-2"></i>
+                            Мгновенные операции
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check text-success me-2"></i>
+                            Без скрытых комиссий
+                        </li>
+                        <li>
+                            <i class="fas fa-check text-success me-2"></i>
+                            Круглосуточный доступ
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+                <div class="feature-card">
+                    <div class="feature-icon" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                        <i class="fas fa-file-contract"></i>
+                    </div>
+                    <h4 class="fw-bold mb-3">Payment Consents</h4>
+                    <p class="text-muted">
+                        Single-use, Multi-use и VRP согласия для безопасных платежей
+                        в соответствии с банковскими стандартами
+                    </p>
+                    <ul class="list-unstyled text-start">
+                        <li class="mb-2">
+                            <i class="fas fa-check text-success me-2"></i>
+                            Одноразовые платежи
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check text-success me-2"></i>
+                            Многоразовые согласия
+                        </li>
+                        <li>
+                            <i class="fas fa-check text-success me-2"></i>
+                            Переменные платежи (VRP)
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+                <div class="feature-card">
+                    <div class="feature-icon" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h4 class="fw-bold mb-3">Безопасность OAuth2</h4>
+                    <p class="text-muted">
+                        Ваши данные защищены протоколами Open Banking и банковскими стандартами.
+                        Шифрование end-to-end
+                    </p>
+                    <ul class="list-unstyled text-start">
+                        <li class="mb-2">
+                            <i class="fas fa-check text-success me-2"></i>
+                            OAuth2 аутентификация
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check text-success me-2"></i>
+                            Банковское шифрование
+                        </li>
+                        <li>
+                            <i class="fas fa-check text-success me-2"></i>
+                            Регулярные аудиты
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+                <div class="feature-card">
+                    <div class="feature-icon" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+                        <i class="fas fa-chart-pie"></i>
+                    </div>
+                    <h4 class="fw-bold mb-3">Умная аналитика</h4>
+                    <p class="text-muted">
+                        Детальная аналитика расходов и доходов по всем счетам.
+                        Категоризация и бюджетирование
+                    </p>
+                    <ul class="list-unstyled text-start">
+                        <li class="mb-2">
+                            <i class="fas fa-check text-success me-2"></i>
+                            Автоматическая категоризация
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check text-success me-2"></i>
+                            Визуализация данных
+                        </li>
+                        <li>
+                            <i class="fas fa-check text-success me-2"></i>
+                            Прогнозирование расходов
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+                <div class="feature-card">
+                    <div class="feature-icon" style="background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h4 class="fw-bold mb-3">Удобный интерфейс</h4>
+                    <p class="text-muted">
+                        Современный и интуитивно понятный дизайн для всех устройств.
+                        Быстрая навигация и поиск
+                    </p>
+                    <ul class="list-unstyled text-start">
+                        <li class="mb-2">
+                            <i class="fas fa-check text-success me-2"></i>
+                            Адаптивный дизайн
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check text-success me-2"></i>
+                            Темная тема
+                        </li>
+                        <li>
+                            <i class="fas fa-check text-success me-2"></i>
+                            Быстрый поиск
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+                <div class="feature-card">
+                    <div class="feature-icon" style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);">
+                        <i class="fas fa-sync-alt"></i>
+                    </div>
+                    <h4 class="fw-bold mb-3">Реальная синхронизация</h4>
+                    <p class="text-muted">
+                        Работа с реальными Banking API или тестовыми данными.
+                        Гибкая настройка режимов работы
+                    </p>
+                    <ul class="list-unstyled text-start">
+                        <li class="mb-2">
+                            <i class="fas fa-check text-success me-2"></i>
+                            Real Banking API
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check text-success me-2"></i>
+                            Mock данные для тестов
+                        </li>
+                        <li>
+                            <i class="fas fa-check text-success me-2"></i>
+                            Автосинхронизация
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Banks Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="row text-center mb-5">
+            <div class="col-12">
+                <h2 class="fw-bold display-5 mb-3">Поддерживаемые банки</h2>
+                <p class="lead text-muted">Безопасное подключение через Open Banking API с полным функционалом</p>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <!-- ABank -->
+            <div class="col-md-6 col-lg-4">
+                <div class="bank-card position-relative">
+                    <span class="api-badge">
+                        <i class="fas fa-plug me-1"></i>
+                        API Ready
+                    </span>
+                    <div class="bank-header" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                        <div class="bank-logo">
+                            <i class="fas fa-university"></i>
+                        </div>
+                        <h4 class="fw-bold mb-2">ABank</h4>
+                        <p class="mb-0 opacity-75">Open Banking API</p>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="mb-4">
+                            <h6 class="fw-bold mb-3">Доступные функции:</h6>
+                            <ul class="list-unstyled mb-0">
+                                <li class="mb-2">
+                                    <i class="fas fa-check text-success me-2"></i>
+                                    Просмотр счетов и балансов
+                                </li>
+                                <li class="mb-2">
+                                    <i class="fas fa-check text-success me-2"></i>
+                                    История транзакций
+                                </li>
+                                <li class="mb-2">
+                                    <i class="fas fa-check text-success me-2"></i>
+                                    Межбанковские переводы
+                                </li>
+                                <li class="mb-0">
+                                    <i class="fas fa-check text-success me-2"></i>
+                                    Payment Consents
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="text-center">
+                            <a href="/login" class="btn btn-gradient w-100">
+                                <i class="fas fa-plug me-2"></i>
+                                Подключить ABank
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VBank -->
+            <div class="col-md-6 col-lg-4">
+                <div class="bank-card position-relative">
+                    <span class="api-badge">
+                        <i class="fas fa-plug me-1"></i>
+                        API Ready
+                    </span>
+                    <div class="bank-header" style="background: linear-gradient(135deg, #21a038 0%, #1a8730 100%);">
+                        <div class="bank-logo">
+                            <i class="fas fa-university"></i>
+                        </div>
+                        <h4 class="fw-bold mb-2">VBank</h4>
+                        <p class="mb-0 opacity-75">Open Banking API</p>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="mb-4">
+                            <h6 class="fw-bold mb-3">Доступные функции:</h6>
+                            <ul class="list-unstyled mb-0">
+                                <li class="mb-2">
+                                    <i class="fas fa-check text-success me-2"></i>
+                                    Просмотр счетов и балансов
+                                </li>
+                                <li class="mb-2">
+                                    <i class="fas fa-check text-success me-2"></i>
+                                    Детальная аналитика
+                                </li>
+                                <li class="mb-2">
+                                    <i class="fas fa-check text-success me-2"></i>
+                                    Быстрые переводы
+                                </li>
+                                <li class="mb-0">
+                                    <i class="fas fa-check text-success me-2"></i>
+                                    Категоризация расходов
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="text-center">
+                            <a href="/login" class="btn btn-gradient w-100">
+                                <i class="fas fa-plug me-2"></i>
+                                Подключить VBank
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SBank -->
+            <div class="col-md-6 col-lg-4">
+                <div class="bank-card position-relative">
+                    <span class="api-badge">
+                        <i class="fas fa-plug me-1"></i>
+                        API Ready
+                    </span>
+                    <div class="bank-header" style="background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);">
+                        <div class="bank-logo">
+                            <i class="fas fa-university"></i>
+                        </div>
+                        <h4 class="fw-bold mb-2">SBank</h4>
+                        <p class="mb-0 opacity-75">Open Banking API</p>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="mb-4">
+                            <h6 class="fw-bold mb-3">Доступные функции:</h6>
+                            <ul class="list-unstyled mb-0">
+                                <li class="mb-2">
+                                    <i class="fas fa-check text-success me-2"></i>
+                                    Просмотр счетов и балансов
+                                </li>
+                                <li class="mb-2">
+                                    <i class="fas fa-check text-success me-2"></i>
+                                    Бюджетирование и планирование
+                                </li>
+                                <li class="mb-2">
+                                    <i class="fas fa-check text-success me-2"></i>
+                                    Уведомления и алерты
+                                </li>
+                                <li class="mb-0">
+                                    <i class="fas fa-check text-success me-2"></i>
+                                    Отчеты и выгрузки
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="text-center">
+                            <a href="/login" class="btn btn-gradient w-100">
+                                <i class="fas fa-plug me-2"></i>
+                                Подключить SBank
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Stats Section -->
+<section class="py-5 bg-dark text-white">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-md-3 mb-4">
+                <div class="stat-card">
+                    <i class="fas fa-university fa-3x text-primary mb-3"></i>
+                    <h3 class="fw-bold text-primary">3+</h3>
+                    <p class="text-muted mb-0">Банка</p>
+                </div>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="stat-card">
+                    <i class="fas fa-shield-alt fa-3x text-success mb-3"></i>
+                    <h3 class="fw-bold text-success">100%</h3>
+                    <p class="text-muted mb-0">Безопасность</p>
+                </div>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="stat-card">
+                    <i class="fas fa-exchange-alt fa-3x text-warning mb-3"></i>
+                    <h3 class="fw-bold text-warning">24/7</h3>
+                    <p class="text-muted mb-0">Доступность</p>
+                </div>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="stat-card">
+                    <i class="fas fa-money-bill-wave fa-3x text-info mb-3"></i>
+                    <h3 class="fw-bold text-info">0₽</h3>
+                    <p class="text-muted mb-0">Бесплатно</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Technology Stack -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h2 class="fw-bold display-5 mb-4">Современные технологии</h2>
+                <p class="lead text-muted mb-4">
+                    Мы используем передовые технологии для обеспечения надежности,
+                    безопасности и производительности платформы:
+                </p>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center mb-3">
+                            <i class="fab fa-java fa-2x text-primary me-3"></i>
+                            <div>
+                                <h6 class="fw-bold mb-1">Spring Boot</h6>
+                                <small class="text-muted">Backend Framework</small>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center mb-3">
+                            <i class="fas fa-database fa-2x text-success me-3"></i>
+                            <div>
+                                <h6 class="fw-bold mb-1">JPA/Hibernate</h6>
+                                <small class="text-muted">Data Persistence</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center mb-3">
+                            <i class="fas fa-shield-alt fa-2x text-warning me-3"></i>
+                            <div>
+                                <h6 class="fw-bold mb-1">Spring Security</h6>
+                                <small class="text-muted">OAuth2 & Security</small>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center mb-3">
+                            <i class="fas fa-bolt fa-2x text-info me-3"></i>
+                            <div>
+                                <h6 class="fw-bold mb-1">WebFlux</h6>
+                                <small class="text-muted">Reactive Programming</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="position-relative">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2721/2721260.png"
+                         alt="Technology Stack" class="img-fluid rounded-3 shadow">
+                    <div class="position-absolute top-0 start-0 w-100 h-100 bg-primary bg-opacity-10 rounded-3"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-5" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+    <div class="container text-center text-white">
+        <h2 class="fw-bold mb-4 display-5">Готовы начать управление финансами?</h2>
+        <p class="lead mb-5">Присоединяйтесь к тысячам пользователей, которые уже используют Multibank для удобного управления всеми банковскими счетами</p>
+        <div class="d-flex flex-wrap gap-3 justify-content-center">
+            <a href="/register" class="btn btn-light btn-lg fw-bold px-5 py-3">
+                <i class="fas fa-user-plus me-2"></i>
+                Создать аккаунт
+            </a>
+            <a href="/demo" class="btn btn-outline-light btn-lg fw-bold px-5 py-3">
+                <i class="fas fa-eye me-2"></i>
+                Посмотреть демо
+            </a>
+        </div>
+    </div>
+</section>
+
+<footer class="bg-dark text-light py-4">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <h5 class="fw-bold">
+                    <i class="fas fa-piggy-bank me-2"></i>
+                    Multibank
+                </h5>
+                <p class="text-muted mb-0">Современная платформа для управления банковскими счетами через Open Banking API</p>
+            </div>
+            <div class="col-md-6 text-md-end">
+                <p class="text-muted mb-0">
+                    &copy; 2024 Multibank. Все права защищены.<br>
+                    Open Banking API: ABank, VBank, SBank
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

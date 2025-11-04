@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Переводы - Multibank</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #667eea;
+            --secondary: #764ba2;
+        }
+
+        .transfer-card {
+            border: none;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .step-indicator {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .step {
+            display: flex;
+            align-items: center;
+            flex: 1;
+        }
+
+        .step-number {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #e9ecef;
+            color: #6c757d;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .step.active .step-number {
+            background: var(--primary);
+            color: white;
+        }
+
+        .step-line {
+            flex: 1;
+            height: 2px;
+            background: #e9ecef;
+            margin: 0 10px;
+        }
+
+        .bank-selector {
+            border: 2px solid #e9ecef;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .bank-selector:hover, .bank-selector.active {
+            border-color: var(--primary);
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        .bank-logo-sm {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: white;
+            margin: 0 auto 10px;
+        }
+
+        .btn-gradient {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            border: none;
+            color: white;
+            font-weight: 600;
+            padding: 12px 30px;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-gradient:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+<div th:replace="fragments/navbar :: user-navbar"></div>
+
+<div class="container-fluid py-4">
+    <div class="container">
+        <!-- Заголовок -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <h2 class="fw-bold text-primary">
+                    <i class="fas fa-exchange-alt me-2"></i>
+                    Переводы между банками
+                </h2>
+                <p class="text-muted">Безопасные переводы через Open Banking API с Payment Consents</p>
+            </div>
+        </div>
+
+        <!-- Сообщения -->
+        <div th:if="${success}" class="alert alert-success alert-dismissible fade show mb-4">
+            <i class="fas fa-check-circle me-2"></i>
+            <span th:utext="${success}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show mb-4">
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            <span th:text="${error}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <div class="row">
+            <!-- Форма перевода -->
+            <div class="col-lg-8">
+                <div class="transfer-card">
+                    <div class="card-header bg-transparent border-bottom-0">
+                        <h4 class="fw-bold mb-0">
+                            <i class="fas fa-money-bill-wave me-2"></i>
+                            Новый перевод
+                        </h4>
+                    </div>
+                    <div class="card-body p-4">
+                        <!-- Индикатор шагов -->
+                        <div class="step-indicator">
+                            <div class="step active">
+                                <div class="step-number">1</div>
+                                <span>Выбор банков</span>
+                            </div>
+                            <div class="step-line"></div>
+                            <div class="step">
+                                <div class="step-number">2</div>
+                                <span>Согласие</span>
+                            </div>
+                            <div class="step-line"></div>
+                            <div class="step">
+                                <div class="step-number">3</div>
+                                <span>Подтверждение</span>
+                            </div>
+                        </div>
+
+                        <!-- Форма перевода -->
+                        <form th:action="@{/make-transfer}" method="post">
+                            <div class="row g-4">
+                                <!-- Банк отправителя -->
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold">Откуда перевести</label>
+                                    <select name="fromBankId" class="form-select" required>
+                                        <option value="">Выберите банк</option>
+                                        <option th:each="bank : ${banks}" th:value="${bank.key}" th:text="${bank.value}"></option>
+                                    </select>
+                                </div>
+
+                                <!-- Банк получателя -->
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold">Куда перевести</label>
+                                    <select name="toBankId" class="form-select" required>
+                                        <option value="">Выберите банк</option>
+                                        <option th:each="bank : ${banks}" th:value="${bank.key}" th:text="${bank.value}"></option>
+                                    </select>
+                                </div>
+
+                                <!-- Счет отправителя -->
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold">Счет отправителя</label>
+                                    <select name="fromAccount" class="form-select" required>
+                                        <option value="">Выберите счет</option>
+                                        <option th:each="account : ${realAccounts.accounts}" th:value="${account.account_id}" th:text="|${account.account_name} (${account.account_number})|"></option>
+                                    </select>
+                                </div>
+
+                                <!-- Счет получателя -->
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold">Счет получателя</label>
+                                    <select name="toAccount" class="form-select" required>
+                                        <option value="">Выберите счет</option>
+                                        <option th:each="account : ${realAccounts.accounts}" th:value="${account.account_id}" th:text="|${account.account_name} (${account.account_number})|"></option>
+                                    </select>
+                                </div>
+
+                                <!-- Сумма -->
+                                <div class="col-12">
+                                    <label class="form-label fw-semibold">Сумма перевода (RUB)</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light">₽</span>
+                                        <input type="number" name="amount" class="form-control" placeholder="0.00" step="0.01" min="0.01" required>
+                                    </div>
+                                </div>
+
+                                <!-- Кнопка отправки -->
+                                <div class="col-12">
+                                    <button type="submit" class="btn btn-gradient w-100 py-3 fw-bold">
+                                        <i class="fas fa-paper-plane me-2"></i>
+                                        Выполнить перевод через Banking API
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Боковая панель -->
+            <div class="col-lg-4">
+                <!-- Создание согласия -->
+                <div class="card transfer-card mb-4">
+                    <div class="card-header bg-transparent border-bottom-0">
+                        <h5 class="fw-bold mb-0">
+                            <i class="fas fa-file-contract me-2"></i>
+                            Payment Consents
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <form th:action="@{/create-consent}" method="post">
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Тип согласия</label>
+                                <select name="consentType" class="form-select" required>
+                                    <option value="single_use">Single Use (одноразовое)</option>
+                                    <option value="multi_use">Multi Use (многоразовое)</option>
+                                    <option value="vrp">VRP (переменные платежи)</option>
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Банк</label>
+                                <select name="bankId" class="form-select" required>
+                                    <option value="">Выберите банк</option>
+                                    <option th:each="bank : ${banks}" th:value="${bank.key}" th:text="${bank.value}"></option>
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Счет</label>
+                                <select name="debtorAccount" class="form-select">
+                                    <option value="">Автоматический выбор</option>
+                                    <option th:each="account : ${realAccounts.accounts}" th:value="${account.account_id}" th:text="|${account.account_name} (${account.account_number})|"></option>
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Сумма (для Single Use)</label>
+                                <input type="number" name="amount" class="form-control" placeholder="0.00" step="0.01" min="0">
+                            </div>
+
+                            <button type="submit" class="btn btn-outline-primary w-100">
+                                <i class="fas fa-shield-alt me-2"></i>
+                                Создать согласие
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Информация -->
+                <div class="card transfer-card">
+                    <div class="card-body">
+                        <h6 class="fw-bold mb-3">
+                            <i class="fas fa-info-circle me-2"></i>
+                            О переводах
+                        </h6>
+                        <div class="mb-3">
+                            <small class="text-muted">
+                                <i class="fas fa-bolt text-warning me-2"></i>
+                                <strong>Мгновенные переводы</strong><br>
+                                Между банками через Open Banking API
+                            </small>
+                        </div>
+                        <div class="mb-3">
+                            <small class="text-muted">
+                                <i class="fas fa-shield-alt text-success me-2"></i>
+                                <strong>Безопасность</strong><br>
+                                Payment Consents для защиты платежей
+                            </small>
+                        </div>
+                        <div>
+                            <small class="text-muted">
+                                <i class="fas fa-clock text-info me-2"></i>
+                                <strong>Круглосуточно</strong><br>
+                                Переводы доступны 24/7
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Динамическое обновление счетов при выборе банка
+    document.addEventListener('DOMContentLoaded', function() {
+        const bankSelects = document.querySelectorAll('select[name="fromBankId"], select[name="toBankId"]');
+
+        bankSelects.forEach(select => {
+            select.addEventListener('change', function() {
+                const bankId = this.value;
+                const accountSelect = this.name === 'fromBankId'
+                    ? document.querySelector('select[name="fromAccount"]')
+                    : document.querySelector('select[name="toAccount"]');
+
+                if (bankId) {
+                    // Здесь можно добавить AJAX запрос для загрузки счетов банка
+                    console.log('Загрузка счетов для банка:', bankId);
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>

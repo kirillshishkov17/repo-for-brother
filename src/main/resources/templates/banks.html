@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Подключение банков - Multibank</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #667eea;
+            --secondary: #764ba2;
+        }
+
+        .bank-card {
+            border: none;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .bank-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+        }
+
+        .bank-header {
+            padding: 30px;
+            color: white;
+            text-align: center;
+        }
+
+        .bank-logo-large {
+            width: 80px;
+            height: 80px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+            margin: 0 auto 20px;
+            background: rgba(255,255,255,0.2);
+        }
+
+        .connection-status {
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+
+        .btn-gradient {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            border: none;
+            color: white;
+            font-weight: 600;
+            padding: 12px 30px;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-gradient:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+<div th:replace="fragments/navbar :: user-navbar"></div>
+
+<div class="container-fluid py-4">
+    <div class="container">
+        <!-- Заголовок -->
+        <div class="row mb-5">
+            <div class="col-12">
+                <h2 class="fw-bold text-primary">
+                    <i class="fas fa-university me-2"></i>
+                    Подключение банков
+                </h2>
+                <p class="text-muted">Подключите ваши банки через Open Banking API для управления счетами и переводами</p>
+            </div>
+        </div>
+
+        <!-- Сообщения -->
+        <div th:if="${success}" class="alert alert-success alert-dismissible fade show mb-4">
+            <i class="fas fa-check-circle me-2"></i>
+            <span th:text="${success}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show mb-4">
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            <span th:text="${error}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <!-- Доступные банки -->
+        <div class="row mb-5">
+            <div class="col-12">
+                <h4 class="fw-bold mb-4">Доступные банки</h4>
+                <div class="row g-4">
+                    <!-- ABank -->
+                    <div class="col-md-6 col-lg-4">
+                        <div class="bank-card">
+                            <div class="bank-header" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                                <div class="bank-logo-large">
+                                    <i class="fas fa-university"></i>
+                                </div>
+                                <h4 class="fw-bold mb-2">ABank</h4>
+                                <p class="mb-0 opacity-75">Open Banking API</p>
+                            </div>
+                            <div class="card-body p-4">
+                                <div class="mb-4">
+                                    <h6 class="fw-bold mb-3">Доступные функции:</h6>
+                                    <ul class="list-unstyled mb-0">
+                                        <li class="mb-2">
+                                            <i class="fas fa-check text-success me-2"></i>
+                                            Просмотр счетов
+                                        </li>
+                                        <li class="mb-2">
+                                            <i class="fas fa-check text-success me-2"></i>
+                                            История транзакций
+                                        </li>
+                                        <li class="mb-2">
+                                            <i class="fas fa-check text-success me-2"></i>
+                                            Межбанковские переводы
+                                        </li>
+                                        <li class="mb-0">
+                                            <i class="fas fa-check text-success me-2"></i>
+                                            Аналитика расходов
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="text-center">
+                                    <a href="/oauth2/authorization/abank" class="btn btn-gradient w-100">
+                                        <i class="fas fa-plug me-2"></i>
+                                        Подключить ABank
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- VBank -->
+                    <div class="col-md-6 col-lg-4">
+                        <div class="bank-card">
+                            <div class="bank-header" style="background: linear-gradient(135deg, #21a038 0%, #1a8730 100%);">
+                                <div class="bank-logo-large">
+                                    <i class="fas fa-university"></i>
+                                </div>
+                                <h4 class="fw-bold mb-2">VBank</h4>
+                                <p class="mb-0 opacity-75">Open Banking API</p>
+                            </div>
+                            <div class="card-body p-4">
+                                <div class="mb-4">
+                                    <h6 class="fw-bold mb-3">Доступные функции:</h6>
+                                    <ul class="list-unstyled mb-0">
+                                        <li class="mb-2">
+                                            <i class="fas fa-check text-success me-2"></i>
+                                            Просмотр счетов
+                                        </li>
+                                        <li class="mb-2">
+                                            <i class="fas fa-check text-success me-2"></i>
+                                            История транзакций
+                                        </li>
+                                        <li class="mb-2">
+                                            <i class="fas fa-check text-success me-2"></i>
+                                            Быстрые переводы
+                                        </li>
+                                        <li class="mb-0">
+                                            <i class="fas fa-check text-success me-2"></i>
+                                            Категоризация
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="text-center">
+                                    <a href="/oauth2/authorization/vbank" class="btn btn-gradient w-100">
+                                        <i class="fas fa-plug me-2"></i>
+                                        Подключить VBank
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SBank -->
+                    <div class="col-md-6 col-lg-4">
+                        <div class="bank-card">
+                            <div class="bank-header" style="background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);">
+                                <div class="bank-logo-large">
+                                    <i class="fas fa-university"></i>
+                                </div>
+                                <h4 class="fw-bold mb-2">SBank</h4>
+                                <p class="mb-0 opacity-75">Open Banking API</p>
+                            </div>
+                            <div class="card-body p-4">
+                                <div class="mb-4">
+                                    <h6 class="fw-bold mb-3">Доступные функции:</h6>
+                                    <ul class="list-unstyled mb-0">
+                                        <li class="mb-2">
+                                            <i class="fas fa-check text-success me-2"></i>
+                                            Просмотр счетов
+                                        </li>
+                                        <li class="mb-2">
+                                            <i class="fas fa-check text-success me-2"></i>
+                                            История транзакций
+                                        </li>
+                                        <li class="mb-2">
+                                            <i class="fas fa-check text-success me-2"></i>
+                                            Бюджетирование
+                                        </li>
+                                        <li class="mb-0">
+                                            <i class="fas fa-check text-success me-2"></i>
+                                            Уведомления
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="text-center">
+                                    <a href="/oauth2/authorization/sbank" class="btn btn-gradient w-100">
+                                        <i class="fas fa-plug me-2"></i>
+                                        Подключить SBank
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Подключенные банки -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header bg-transparent border-bottom-0">
+                        <h4 class="fw-bold mb-0">
+                            <i class="fas fa-link me-2"></i>
+                            Подключенные банки
+                        </h4>
+                    </div>
+                    <div class="card-body">
+                        <div th:if="${bankConnections != null && !bankConnections.empty}" class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                <tr>
+                                    <th>Банк</th>
+                                    <th>Статус</th>
+                                    <th>Дата подключения</th>
+                                    <th>Кол-во счетов</th>
+                                    <th>Действия</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="connection : ${bankConnections}">
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div th:classappend="'bank-logo-sm me-3'"
+                                                 th:style="|background: linear-gradient(135deg, ${connection.bankId == 'abank' ? '#667eea' : connection.bankId == 'vbank' ? '#21a038' : '#ff6b6b'} 0%, ${connection.bankId == 'abank' ? '#764ba2' : connection.bankId == 'vbank' ? '#1a8730' : '#ee5a52'} 100%);|">
+                                                <i class="fas fa-university"></i>
+                                            </div>
+                                            <div>
+                                                <div class="fw-bold" th:text="${connection.bankName}">Банк</div>
+                                                <small class="text-muted" th:text="${connection.bankId}">ID банка</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                            <span th:classappend="|connection-status bg-${connection.status == 'ACTIVE' ? 'success' : connection.status == 'EXPIRED' ? 'warning' : 'danger'}|"
+                                                  th:text="${connection.status}">Статус</span>
+                                    </td>
+                                    <td th:text="${#temporals.format(connection.createdAt, 'dd.MM.yyyy')}">01.01.2024</td>
+                                    <td>
+                                        <span class="fw-bold" th:text="${connection.accounts != null ? connection.accounts.size() : 0}">0</span>
+                                    </td>
+                                    <td>
+                                        <div class="btn-group">
+                                            <a th:href="@{/bank-connections/{id}(id=${connection.id})}" class="btn btn-sm btn-outline-primary">
+                                                <i class="fas fa-eye me-1"></i>
+                                                Просмотр
+                                            </a>
+                                            <form th:action="@{/bank-connections/{id}/disconnect(id=${connection.id})}" method="post" class="d-inline">
+                                                <button type="submit" class="btn btn-sm btn-outline-danger"
+                                                        onclick="return confirm('Вы уверены, что хотите отключить этот банк?')">
+                                                    <i class="fas fa-unlink me-1"></i>
+                                                    Отключить
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div th:if="${bankConnections == null || bankConnections.empty}" class="text-center py-5">
+                            <i class="fas fa-university fa-4x text-muted mb-3"></i>
+                            <h5 class="text-muted mb-3">Нет подключенных банков</h5>
+                            <p class="text-muted mb-4">Подключите ваш первый банк для начала работы</p>
+                            <a href="#available-banks" class="btn btn-gradient">Подключить банк</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
